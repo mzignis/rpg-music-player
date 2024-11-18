@@ -1,0 +1,9 @@
+music:
+  ask_about_settings: False
+  loop_default: True
+  volume_default: 75
+
+environment:
+  ask_about_settings: False
+  loop_default: True
+  volume_default: 100
