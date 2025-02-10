@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from tools.player import play_youtube_audio, kill_process_by_pid
-from tools.youtube import search_youtube_from_environment_ambient
+from tools.youtube import search_youtube_for_environment_ambient
 
 
 # -------- custom request message --------
@@ -40,7 +40,7 @@ async def play(request: CustomRequest) -> dict:
 
     # -------- play music --------
     if kind == 'music':
-        youtube_url = search_youtube_from_environment_ambient(prompt, studio='bardify')[0]
+        youtube_url = search_youtube_for_environment_ambient(prompt, studio='bardify')[0]
         if pids['music'] is not None:
             kill_process_by_pid(pids['music'])
         pid = play_youtube_audio(
@@ -54,7 +54,7 @@ async def play(request: CustomRequest) -> dict:
     # -------- play environment music --------
     elif kind == 'environment':
         # play environment music here
-        youtube_url = search_youtube_from_environment_ambient(prompt)[0]
+        youtube_url = search_youtube_for_environment_ambient(prompt)[0]
         if pids['environment'] is not None:
             kill_process_by_pid(pids['environment'])
         pid = play_youtube_audio(

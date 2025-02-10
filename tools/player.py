@@ -31,7 +31,6 @@ def play_youtube_audio(
     pid: int = play_via_ffplay(yt_url_input, volume, loop)
     print(f'Playing with pid: {pid}')
     print()
-
     return pid
 
 

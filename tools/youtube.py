@@ -30,6 +30,7 @@ def get_youtube_urls(search_text: str, max_results: int = 1) -> list:
 
         # Parse the response JSON to extract the video URLs
         results = response.json().get('items', [])
+        print(results)
         video_urls = [f"https://www.youtube.com/watch?v={item['id']['videoId']}" for item in results]
         return video_urls
 
@@ -43,15 +44,24 @@ def search_youtube(yt_prompt_text: str, max_results: int = 1) -> list[str]:
     return video_urls
 
 
-def search_youtube_from_environment_ambient(
-        environment_prompt: str, studio: str = 'Michael Ghelfi Studios', max_results: int = 1
+def search_youtube_for_environment_ambient(
+        environment_prompt: str, studio:  int = None, max_results: int = 1
 ) -> list[str]:
     # There are other studios I recommend to use:
     # Francis Bonin Music, Bardify, Lucas Quinn Creations, Michael Ghelfi Studios
+    studios: dict = {
+        0: 'Francis Bonin Music',
+        1: 'Bardify',
+        2: 'Lucas Quinn Creations',
+        3: 'Michael Ghelfi Studios'
+    }
+
+    studio = studios.get(studio, 'Francis Bonin Music')
     prompt: str = f"{studio} - {environment_prompt}"
     video_urls = get_youtube_urls(prompt, max_results)
     return video_urls
 
 
 if __name__ == '__main__':
-    pass
+    print(search_youtube('door sound effect'))
+
