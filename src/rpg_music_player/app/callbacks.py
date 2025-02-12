@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from pprint import pp
 
 import dash
 from dash import Output, Input, State
@@ -9,10 +8,9 @@ from dotenv import load_dotenv
 from src.rpg_music_player.ai.assistant import YouTubeSearchAssistant
 from src.rpg_music_player.app.app import app
 from src.rpg_music_player.app.layout import create_card_layout
+from src.rpg_music_player.tools import text as text_tools
 from src.rpg_music_player.youtube.search import YoutubeSearchEngine
 from tools.player import play_youtube_audio, kill_process_by_pid
-
-from src.rpg_music_player.tools import text as text_tools
 
 # -------- load env variables --------
 load_dotenv(Path(__file__).parent.parent.parent.parent / ".env")
