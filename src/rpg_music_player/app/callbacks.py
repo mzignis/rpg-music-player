@@ -17,7 +17,7 @@ load_dotenv(Path(__file__).parent.parent.parent.parent / ".env")
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 
 # -------- define constants variables --------
-IDS = [0, 1, 2]
+IDS = [0, 1, 2, 3, 4, 5, 6, 7]
 
 
 # -------- define callbacks --------
@@ -48,6 +48,7 @@ def change_card_color(*args):
         # ToDo: Add logic to run music player
         if data['url'].startswith('https://www.youtube.com/watch?v='):
             url = data['url']
+            print(url)
             if n_clicks % 2:
                 pid = play_youtube_audio(url)
                 data['pid'] = pid
@@ -56,6 +57,8 @@ def change_card_color(*args):
                 if data['pid']:
                     kill_process_by_pid(data['pid'])
                 outputs_pid_store.append(data)
+        else:
+            outputs_pid_store.append(data)
 
     return outputs_clickable_card + outputs_pid_store
 
@@ -77,7 +80,7 @@ def update_output(n_clicks, prompt):
 
         # search engine
         engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
-        results = engine.search(prompt_new, max_results=3)
+        results = engine.search(prompt_new, max_results=len(IDS))
 
         # create cards layout
         cards: list = []
@@ -85,13 +88,13 @@ def update_output(n_clicks, prompt):
             cards.append(
                 create_card_layout(
                     layout_id=ii,
-                    title=text_tools.shorten_text(rr.title, 16),
-                    channel=text_tools.shorten_text(rr.channel_name),
-                    url=text_tools.shorten_text(rr.url),
+                    title=rr.title,
+                    channel=rr.channel_name,
+                    url=rr.url,
                     thumbnail=rr.thumbnail
                 )
             )
 
-        return cards[0], cards[1], cards[2]
+        return tuple(cards)
 
-    return create_card_layout(0), create_card_layout(1), create_card_layout(2)
+    return tuple([create_card_layout(ii) for ii in range(len(IDS))])

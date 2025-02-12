@@ -2,6 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import html
 from dash import dcc
 
+from src.rpg_music_player.tools import text as text_tools
+
 
 def create_layout():
     _layout_ = dbc.Container([
@@ -9,19 +11,12 @@ def create_layout():
         html.Hr(),
         create_search_layout(),
         html.Hr(),
-        html.H1("Ambient music"),
         create_player_layout(0),
-        html.Br(),
+        create_player_layout(0, layout_offset=4),
         html.Hr(),
-        html.H1("Background music"),
         create_player_layout(1),
-        html.Br(),
         html.Hr(),
-        html.H1("Combat music"),
         create_player_layout(2),
-        html.Br(),
-        html.Hr(),
-        html.Div(id="search-output", className="mt-2"),
     ])
 
     return _layout_
@@ -57,9 +52,9 @@ def create_card_layout(
             [
                 dcc.Store(
                     id=f"pid-store-{layout_id}",
-                    data={"pid": None, "url": url}
+                    data={"pid": None, "url": url, "title": title, "channel": channel, "thumbnail": thumbnail}
                 ),
-                dbc.Row(
+                dbc.CardBody(
                     [
                         dbc.Col(
                             dbc.CardImg(
@@ -68,62 +63,54 @@ def create_card_layout(
                                 className="img-fluid rounded-start",
                                 style={"maxWidth": "100%", "padding": "8px"}
                             ),
-                            className="col-md-3",
+                            width=4,
                         ),
                         dbc.Col(
-                            dbc.CardBody(
-                                [
-                                    html.H5(
-                                        children=title,
-                                        className="card-title",
-                                        id=f'player-title-{layout_id}'
-                                    ),
-                                    html.P(
-                                        children=channel,
-                                        className="card-text",
-                                        style={"fontSize": "0.9rem"},
-                                        id=f'player-channel-{layout_id}',
-                                    ),
-                                    html.Small(
-                                        children=url,
-                                        className="card-text text-muted",
-                                        id=f'player-url-{layout_id}',
-                                    ),
-                                ]
-                            ),
-                            className="col-md-9",
+                            [
+                                html.H5(
+                                    children=text_tools.shorten_text(title, 16),
+                                    className="card-title",
+                                    id=f'player-title-{layout_id}'
+                                ),
+                                html.H6(
+                                    children=text_tools.shorten_text(channel, 16),
+                                    className="card-text",
+                                    style={"fontSize": "0.9rem"},
+                                    id=f'player-channel-{layout_id}',
+                                ),
+                                html.Small(
+                                    children=text_tools.shorten_text(url, 16),
+                                    className="card-text text-muted",
+                                    id=f'player-url-{layout_id}',
+                                ),
+                            ],
+                            width=8,
                         ),
                     ],
-                    className="g-0 d-flex align-items-center",
+                    className="g-12 d-flex align-items-center",
+                    style={"padding": "8px"}
                 )
             ],
-            className="mb-3",
+            className="mb-1",
             style={"maxWidth": "400px", "cursor": "pointer", "border": "2px solid black"},
             id=f'clickable-card-{layout_id}'
-        )
+        ),
     )
 
     return card
 
 
-def create_player_layout(layout_id: int) -> dbc.Row:
+def create_player_layout(layout_id: int, layout_offset: int = 0) -> dbc.Row:
     player_id = layout_id * 100
 
     _layout_ = dbc.Row([
         dbc.Col(
-            children=create_card_layout(player_id+0),
-            width=4,
-            id=f'player-layout-{player_id}'
-        ),
-        dbc.Col(
-            children=create_card_layout(player_id+1),
-            width=4,
-            id=f'player-layout-{player_id+1}'),
-        dbc.Col(
-            children=create_card_layout(player_id+2),
-            width=4,
-            id=f'player-layout-{player_id+2}'
-        ),
-    ])
+            children=create_card_layout(player_id + ii + layout_offset),
+            width=3,
+            id=f'player-layout-{player_id + ii + layout_offset}',
+            className="mb-1"
+        ) for ii in range(4)
+    ], className="mb-1"
+    )
 
     return _layout_
