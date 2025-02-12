@@ -5,7 +5,6 @@ from dash import dcc
 
 def create_layout():
     _layout_ = dbc.Container([
-        dcc.Store(id="card-click-state", data={"clicked": False}),
         html.H1("RPG Music Player"),
         html.Hr(),
         create_search_layout(),
@@ -22,6 +21,7 @@ def create_layout():
         create_player_layout(2),
         html.Br(),
         html.Hr(),
+        html.Div(id="search-output", className="mt-2"),
     ])
 
     return _layout_
@@ -43,35 +43,51 @@ def create_search_layout():
     return _layout_
 
 
-def create_card_layout(layout_id):
+def create_card_layout(
+        layout_id: int,
+        title: str = "Card title",
+        channel: str = "Card channel",
+        url: str = "Card URL",
+        thumbnail: str = "https://picsum.photos/200"
+) -> html.Div:
     card = html.Div(
         id=f'clickable-card-wrapper-{layout_id}',
         n_clicks=0,
         children=dbc.Card(
             [
+                dcc.Store(
+                    id=f"pid-store-{layout_id}",
+                    data={"pid": None, "url": url}
+                ),
                 dbc.Row(
                     [
                         dbc.Col(
                             dbc.CardImg(
-                                id=f'player-image-{layout_id}',
-                                src="https://picsum.photos/200",
+                                id=f'player-thumbnail-{layout_id}',
+                                src=thumbnail,
                                 className="img-fluid rounded-start",
-                                style={"maxWidth": "100%"}  # Reduce image size
+                                style={"maxWidth": "100%", "padding": "8px"}
                             ),
-                            className="col-md-3",  # Reduce column width proportionally
+                            className="col-md-3",
                         ),
                         dbc.Col(
                             dbc.CardBody(
                                 [
-                                    html.H5("Card title", className="card-title"),  # Slightly smaller heading
+                                    html.H5(
+                                        children=title,
+                                        className="card-title",
+                                        id=f'player-title-{layout_id}'
+                                    ),
                                     html.P(
-                                        "This is a slightly smaller card ...",
+                                        children=channel,
                                         className="card-text",
-                                        style={"fontSize": "0.9rem"}  # Reduce font size slightly
+                                        style={"fontSize": "0.9rem"},
+                                        id=f'player-channel-{layout_id}',
                                     ),
                                     html.Small(
-                                        "Last updated 3 mins ago",
+                                        children=url,
                                         className="card-text text-muted",
+                                        id=f'player-url-{layout_id}',
                                     ),
                                 ]
                             ),
@@ -90,41 +106,24 @@ def create_card_layout(layout_id):
     return card
 
 
-def create_player_layout(layout_id: int):
+def create_player_layout(layout_id: int) -> dbc.Row:
     player_id = layout_id * 100
 
     _layout_ = dbc.Row([
-        dbc.Col(children=create_card_layout(player_id+0), width=4),
-        dbc.Col(children=create_card_layout(player_id+1), width=4),
-        dbc.Col(children=create_card_layout(player_id+2), width=4),
-    ], id=f'player-layout-{player_id}')
-    # _layout_ = dbc.Row(
-    #     children=[
-    #         dbc.Col(
-    #             children=[
-    #                 dbc.Button(
-    #                     children="▶ Play",
-    #                     id=f"play-stop-button-{layout_id}",
-    #                     color="primary",
-    #                     className="me-2"
-    #                 ),
-    #                 html.Div(id=f"status-text-{layout_id}"),
-    #             ],
-    #             width=2
-    #         ),
-    #         dbc.Col(
-    #             children=[
-    #                 html.Plaintext(id=f"player-image-{layout_id}", children=""),
-    #             ],
-    #             width=2
-    #         ),
-    #         dbc.Col(
-    #             children=[
-    #                 html.Plaintext(id=f"plain-text-{layout_id}", children=""),
-    #             ],
-    #             width=2
-    #         ),
-    #     ],
-    #     className="p-3")
+        dbc.Col(
+            children=create_card_layout(player_id+0),
+            width=4,
+            id=f'player-layout-{player_id}'
+        ),
+        dbc.Col(
+            children=create_card_layout(player_id+1),
+            width=4,
+            id=f'player-layout-{player_id+1}'),
+        dbc.Col(
+            children=create_card_layout(player_id+2),
+            width=4,
+            id=f'player-layout-{player_id+2}'
+        ),
+    ])
 
     return _layout_
