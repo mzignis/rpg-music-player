@@ -5,7 +5,7 @@ from tools.ffplay import play_via_ffplay
 
 
 def play_youtube_audio(
-        yt_url_input: str, volume_default: int = 30, loop_default: bool = True, ask_about_settings: bool = False
+        yt_url_input: str, volume_default: int = 100, loop_default: bool = True, ask_about_settings: bool = False
 ) -> int:
 
     if ask_about_settings:
