@@ -5,4 +5,4 @@ import callbacks  # Import to register callbacks
 app.layout = create_layout()
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8080)
