@@ -17,7 +17,7 @@ load_dotenv(Path(__file__).parent.parent.parent.parent / ".env")
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 
 # -------- define constants variables --------
-IDS = [0, 1, 2, 3, 4, 5, 6, 7]
+IDS = [0, 1, 2, 3, 4, 5, 6, 7, 100, 101, 102, 103, 200, 201, 202, 203]
 
 
 # -------- define callbacks --------
@@ -65,7 +65,7 @@ def change_card_color(*args):
 
 @app.callback(
     [
-        Output(f"player-layout-{_id_}", "children") for _id_ in IDS
+        Output(f"player-layout-{_id_}", "children") for _id_ in IDS[:8]
     ],
     Input("search-button", "n_clicks"),
     State("search-input", "value"),
@@ -77,10 +77,11 @@ def update_output(n_clicks, prompt):
         # ai search assistant
         assistant = YouTubeSearchAssistant()
         prompt_new = assistant.convert_search_prompt(prompt)
+        print('new prompt:', prompt_new)
 
         # search engine
         engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
-        results = engine.search(prompt_new, max_results=len(IDS))
+        results = engine.search(prompt_new, max_results=len(IDS[:8]))
 
         # create cards layout
         cards: list = []
@@ -97,4 +98,80 @@ def update_output(n_clicks, prompt):
 
         return tuple(cards)
 
-    return tuple([create_card_layout(ii) for ii in range(len(IDS))])
+    return tuple([create_card_layout(ii) for ii in range(len(IDS[:8]))])
+
+
+@app.callback(
+    [
+        Output(f"player-layout-{_id_+100}", "children") for _id_ in range(4)
+    ],
+    Input("search-button", "n_clicks"),
+    State("search-input", "value"),
+    prevent_initial_call=True
+)
+def update_output100(n_clicks, prompt):
+    if prompt and n_clicks:
+
+        # ai search assistant
+        assistant = YouTubeSearchAssistant()
+        prompt_new = assistant.get_background_prompt("dnd environment music")
+        print('new background prompt:', prompt_new)
+
+        # search engine
+        engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
+        results = engine.search(prompt_new, max_results=4)
+
+        # create cards layout
+        cards: list = []
+        for ii, rr in enumerate(results):
+            cards.append(
+                create_card_layout(
+                    layout_id=ii+100,
+                    title=rr.title,
+                    channel=rr.channel_name,
+                    url=rr.url,
+                    thumbnail=rr.thumbnail
+                )
+            )
+
+        return tuple(cards)
+
+    return tuple([create_card_layout(ii) for ii in range(4)])
+
+
+@app.callback(
+    [
+        Output(f"player-layout-{_id_+200}", "children") for _id_ in range(4)
+    ],
+    Input("search-button", "n_clicks"),
+    State("search-input", "value"),
+    prevent_initial_call=True
+)
+def update_output200(n_clicks, prompt):
+    if prompt and n_clicks:
+
+        # ai search assistant
+        assistant = YouTubeSearchAssistant()
+        prompt_new = assistant.get_combat_prompt("dnd combat music")
+        print('new combat prompt:', prompt_new)
+
+        # search engine
+        engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
+        results = engine.search(prompt_new, max_results=4)
+
+        # create cards layout
+        cards: list = []
+        for ii, rr in enumerate(results):
+            cards.append(
+                create_card_layout(
+                    layout_id=ii+200,
+                    title=rr.title,
+                    channel=rr.channel_name,
+                    url=rr.url,
+                    thumbnail=rr.thumbnail
+                )
+            )
+
+        return tuple(cards)
+
+    return tuple([create_card_layout(ii) for ii in range(4)])
