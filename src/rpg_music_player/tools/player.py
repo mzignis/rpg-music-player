@@ -1,11 +1,11 @@
 import os
 import signal
 
-from tools.ffplay import play_via_ffplay
+from src.rpg_music_player.tools.ffplay import play_via_ffplay
 
 
 def play_youtube_audio(
-        yt_url_input: str, volume_default: int = 30, loop_default: bool = True, ask_about_settings: bool = False
+        yt_url_input: str, volume_default: int = 100, loop_default: bool = True, ask_about_settings: bool = False
 ) -> int:
 
     if ask_about_settings:
@@ -31,7 +31,6 @@ def play_youtube_audio(
     pid: int = play_via_ffplay(yt_url_input, volume, loop)
     print(f'Playing with pid: {pid}')
     print()
-
     return pid
 
 
