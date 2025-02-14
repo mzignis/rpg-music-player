@@ -1,7 +1,7 @@
 run:
 	python3 main.py
 
-kill-all:
+kill-ffplay:
 	python3 ./src/rpg_music_player/tools/kill_ffplay.py
 
 kill-port:
