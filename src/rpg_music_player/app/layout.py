@@ -23,14 +23,16 @@ def create_layout():
 
 
 def create_search_layout():
-    _layout_ = dbc.Row(
+    _layout_ = dbc.Container(
         children=[
             dbc.Row(
                 dbc.Input(id="search-input", type="text", placeholder="Enter search term..."),
             ),
-            dbc.Row(
+            dbc.Stack([
                 dbc.Button("Search", id="search-button", color="primary", className="mt-2"),
-                style={"maxWidth": "200px"}
+                html.Div("", className="mx-auto"),
+                dbc.Button("KILL ALL", id="kill-all-button", color="danger", className="mt-2"),
+                ], direction="horizontal", gap=1,
             ),
         ]
     )

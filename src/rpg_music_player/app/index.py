@@ -1,6 +1,6 @@
 from src.rpg_music_player.app.app import app
 from src.rpg_music_player.app.layout import create_layout
-import callbacks  # Import to register callbacks
+import src.rpg_music_player.app.callbacks  # Import to register callbacks
 
 app.layout = create_layout()
 

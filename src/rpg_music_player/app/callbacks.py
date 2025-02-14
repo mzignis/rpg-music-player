@@ -2,15 +2,15 @@ import os
 from pathlib import Path
 
 import dash
+import psutil
 from dash import Output, Input, State
 from dotenv import load_dotenv
 
 from src.rpg_music_player.ai.assistant import YouTubeSearchAssistant
 from src.rpg_music_player.app.app import app
 from src.rpg_music_player.app.layout import create_card_layout
-from src.rpg_music_player.tools import text as text_tools
+from src.rpg_music_player.tools.player import play_youtube_audio, kill_process_by_pid
 from src.rpg_music_player.youtube.search import YoutubeSearchEngine
-from tools.player import play_youtube_audio, kill_process_by_pid
 
 # -------- load env variables --------
 load_dotenv(Path(__file__).parent.parent.parent.parent / ".env")
@@ -175,3 +175,20 @@ def update_output200(n_clicks, prompt):
         return tuple(cards)
 
     return tuple([create_card_layout(ii) for ii in range(4)])
+
+
+@app.callback(
+    Input("kill-all-button", "n_clicks"),
+    prevent_initial_call=True
+)
+def kill_all_subprocesses(n_clicks):
+    # ToDo: change cards frame, n_click
+
+    for process in psutil.process_iter(['pid', 'name', 'cmdline']):
+        try:
+            # Check if 'ffplay' is in the command line of the process
+            if 'ffplay' in process.info['cmdline']:
+                print(f"PID: {process.info['pid']}, Name: {process.info['name']}, Command: {process.info['cmdline']}")
+                process.terminate()
+        except:
+            pass  # Ignore processes that are no longer accessible
