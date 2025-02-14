@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from pprint import pprint
 
 import dash
 import psutil
@@ -45,17 +46,23 @@ def change_card_color(*args):
         new_color = "white" if n_clicks % 2 else "black"
         outputs_clickable_card.append({"maxWidth": "400px", "cursor": "pointer", "border": f"2px solid {new_color}"})
 
-        # ToDo: Add logic to run music player
+        if data['n_clicks'] == n_clicks:
+            outputs_pid_store.append(data)
+            continue
+
+        data['n_clicks'] = n_clicks
+
         if data['url'].startswith('https://www.youtube.com/watch?v='):
             url = data['url']
-            print(url)
             if n_clicks % 2:
-                pid = play_youtube_audio(url)
+                volume = 100 if 100 <= data['layout_id'] < 200 else 35
+                pid = play_youtube_audio(url, volume_default=volume, loop_default=True)
                 data['pid'] = pid
                 outputs_pid_store.append(data)
             else:
                 if data['pid']:
                     kill_process_by_pid(data['pid'])
+                    data['pid'] = None
                 outputs_pid_store.append(data)
         else:
             outputs_pid_store.append(data)
@@ -74,7 +81,7 @@ def change_card_color(*args):
 def update_output(n_clicks, prompt):
     if prompt and n_clicks:
 
-        # ai search assistant
+        # AI search assistant
         assistant = YouTubeSearchAssistant()
         prompt_new = assistant.convert_search_prompt(prompt)
         print('new prompt:', prompt_new)
@@ -112,7 +119,7 @@ def update_output(n_clicks, prompt):
 def update_output100(n_clicks, prompt):
     if prompt and n_clicks:
 
-        # ai search assistant
+        # AI search assistant
         assistant = YouTubeSearchAssistant()
         prompt_new = assistant.get_background_prompt("dnd environment music")
         print('new background prompt:', prompt_new)
@@ -150,7 +157,7 @@ def update_output100(n_clicks, prompt):
 def update_output200(n_clicks, prompt):
     if prompt and n_clicks:
 
-        # ai search assistant
+        # AI search assistant
         assistant = YouTubeSearchAssistant()
         prompt_new = assistant.get_combat_prompt("dnd combat music")
         print('new combat prompt:', prompt_new)
@@ -178,11 +185,14 @@ def update_output200(n_clicks, prompt):
 
 
 @app.callback(
+    [Output(f"player-layout-{_id_}", "children", allow_duplicate=True) for _id_ in IDS],
     Input("kill-all-button", "n_clicks"),
+    [State(f"pid-store-{_id_}", "data") for _id_ in IDS],
     prevent_initial_call=True
 )
-def kill_all_subprocesses(n_clicks):
+def kill_all_subprocesses(_, *data):
     # ToDo: change cards frame, n_click
+    pprint(data)
 
     for process in psutil.process_iter(['pid', 'name', 'cmdline']):
         try:
@@ -192,3 +202,15 @@ def kill_all_subprocesses(n_clicks):
                 process.terminate()
         except:
             pass  # Ignore processes that are no longer accessible
+
+    cards = [
+        create_card_layout(
+            layout_id=dd['layout_id'],
+            title=dd['title'],
+            channel=dd['channel'],
+            url=dd['url'],
+            thumbnail=dd['thumbnail']
+        ) for dd in data
+    ]
+
+    return tuple(cards)

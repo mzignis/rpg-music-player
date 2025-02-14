@@ -54,7 +54,10 @@ def create_card_layout(
             [
                 dcc.Store(
                     id=f"pid-store-{layout_id}",
-                    data={"pid": None, "url": url, "title": title, "channel": channel, "thumbnail": thumbnail}
+                    data={
+                        "pid": None, "url": url, "title": title, "channel": channel, "thumbnail": thumbnail,
+                        "layout_id": layout_id, "n_clicks": 0,
+                    }
                 ),
                 dbc.CardBody(
                     [
