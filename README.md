@@ -50,13 +50,37 @@ The `.env` file contains sensitive information, such as your API keys. To config
 
 2. Add the following content to the `.env` file, replacing the placeholders with your actual API keys:
 
-   ```
-   OPENAI_API_KEY=your_openai_api_key_here
-   YOUTUBE_API_KEY=your_youtube_api_key_here
-   OPENAI_MODEL=gpt-4o-mini
-   ```
+```
+YOUTUBE_API_KEY=<paste_your_youtube_api_key_here>
+```
+   
+### 3. Configurate OLLAMA model
 
-### 3. **Running the Application**
+Download and install OLLAMA server:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Run OLLAMA server:
+
+```bash
+ollama serve
+````
+
+Download and install OLLAMA model:
+
+```bash
+ollama pull llama3.2
+```
+
+Before use make sure you have installed OLLAMA python package:
+
+```bash
+pip install ollama
+```
+
+### 4. **Running the Application**
 
 Once your virtual environment is activated and the `.env` file is configured, you can run the different components of the application using the `make` command.
 
@@ -65,42 +89,24 @@ Once your virtual environment is activated and the `.env` file is configured, yo
 Use the following `make` command to start the music player:
 
 ```bash
-make run-player
+make run
 ```
 
-#### To run the Chatbot:
-
-To start the chatbot interface, use the following `make` command:
+If you want to kill all ffplay processes, you can use the following command:
 
 ```bash
-make run-chatbot
+make kill-ffplay
 ```
 
-### 4. **Additional Configuration (Optional)**
+If you want close port from app, you can use the following command:
+
+```bash
+make kill-port
+```
+
+### 5. **Additional Configuration (Optional)**
 
 You may modify other configuration files to suit your preferences for player settings or chatbot behavior. Refer to the documentation within the project or code for additional customization options.
-
-## Chatbot Commands
-Use the following commands to control the music or environment sounds:
-
-1. **Play Music**:  
-   `-play music {description}`  
-   Example: `-play music play relaxing jazz`
-
-2. **Play Environment Sound**:  
-   `-play environment {description}`  
-   Example: `-play environment play forest sounds`
-
-3. **Stop Music or Environment Sound**:  
-   `-stop music` or `-stop environment`  
-   Example: `-stop music`
-
-4. **Exit**:  
-   `-exit`  
-   Example: `-exit`
-
-Type `-play`, `-stop`, or `-exit` followed by the type (music/environment) to start, stop, or exit the program.
-
 
 ## Troubleshooting
 
