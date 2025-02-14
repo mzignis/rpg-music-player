@@ -1,7 +1,7 @@
 import os
 import signal
 
-from tools.ffplay import play_via_ffplay
+from src.rpg_music_player.tools.ffplay import play_via_ffplay
 
 
 def play_youtube_audio(
