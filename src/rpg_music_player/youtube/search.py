@@ -65,12 +65,29 @@ if __name__ == '__main__':
     from pprint import pp
     from src.rpg_music_player.ai.assistant import YouTubeSearchAssistant
 
-    prompt = 'sea battle with monster'
+    prompt = 'ocean waves'
     assistant = YouTubeSearchAssistant()
 
-    prompt_new = assistant.convert_search_prompt(prompt)
+    print(assistant.get_combat_prompt(prompt))
 
-    engine = YoutubeSearchEngine()
-    results = engine.search(prompt_new, 1)
-    pp(results)
+
+
+    # prompt_new = f'Bardify - {assistant.convert_search_prompt(prompt)}'
+    # print(prompt_new)
+    #
+    # print('--------')
+    #
+    # prompt_new = f'{assistant.convert_search_prompt(prompt)}'
+    # print(prompt_new)
+    #
+    # print('--------')
+
+    # it better for the user to search for the original prompt
+
+    # prompt_new = f'Michael Ghelfi Studios - {assistant.convert_search_prompt(prompt)}'
+    # print(prompt_new)
+    #
+    # engine = YoutubeSearchEngine()
+    # results = engine.search(prompt_new, 4)
+    # pp(results)
 

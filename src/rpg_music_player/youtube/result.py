@@ -69,10 +69,10 @@ class YoutubeResult(AbstractYoutubeResult):
         # self._category: str = category
 
     def __str__(self):
-        return f"YoutubeResult(title={self.title}, url={self.url})"
+        return f"YoutubeResult(title={self.title}, channel={self.channel_name}, url={self.url})"
 
     def __repr__(self):
-        return f"YoutubeResult(title={self.title}, url={self.url})"
+        return f"YoutubeResult(title={self.title}, channel={self.channel_name}, url={self.url})"
 
     @property
     def title(self) -> str:
