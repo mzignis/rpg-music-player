@@ -47,13 +47,7 @@ def get_playlists_from_channel(channel_id: str, max_results: int = 64) -> dict:
 
 def get_videos_from_playlist(playlist_url: str) -> list[dict]:
     playlist = Playlist(playlist_url)
-    videos: list = [
-        {
-            "title": get_video_title(vv.watch_url),
-            "url": vv.watch_url
-        }
-        for vv in playlist.videos
-    ]
+    videos: list = [get_video_dict(vv.watch_url) for vv in playlist.videos]
     return videos
 
 
@@ -63,3 +57,18 @@ def get_video_title(video_url: str) -> str:
         info = ydl.extract_info(video_url, download=False)
         title: str = info['title']
         return title.split('|')[0].strip().lower() if '|' in title else title
+
+
+def get_video_dict(video_url: str) -> dict:
+    ydl_opts = {}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(video_url, download=False)
+        title: str = info['title']
+        channel_name: str = info['uploader']
+        thumbnail: str = info['thumbnail']
+        return {
+            "title": title.split('|')[0].strip().lower() if '|' in title else title,
+            'channel_name': channel_name,
+            'thumbnail': thumbnail,
+            "url": video_url
+        }

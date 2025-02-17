@@ -8,7 +8,8 @@ class YouTubeSearchAssistant:
         self.system_types: dict = {
             'convert': 'search.txt',
             'background': 'background.txt',
-            'combat': 'combat.txt'
+            'combat': 'combat.txt',
+            'collector': 'collector.txt',
         }
 
     def get_system_prompt(self, input_type) -> dict:
@@ -62,14 +63,18 @@ class YouTubeSearchAssistant:
 
         return assistant_reply
 
+    def select_videos_by_title(self, prompt, titles) -> list:
+        system_message: dict = self.get_system_prompt('collector')
+        user_input: str = f"Input: {prompt} \nTitles: {titles}"
+        user_message: dict = self.get_user_prompt(user_input)
+        messages: list[dict] = [system_message, user_message]
+
+        response: dict = ollama.chat(model='llama3.2', messages=messages)
+
+        assistant_reply: list = eval(response['message']['content'])
+
+        return assistant_reply
+
 
 if __name__ == '__main__':
-    assistant = YouTubeSearchAssistant()
-    prompt = assistant.convert_search_prompt('mountain pass')
-    background = assistant.get_background_prompt(prompt)
-    combat = assistant.get_combat_prompt(prompt)
-    print(prompt)
-    print(background)
-    print(combat)
-
-
+    pass

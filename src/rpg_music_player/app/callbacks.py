@@ -12,6 +12,7 @@ from src.rpg_music_player.app.app import app
 from src.rpg_music_player.app.layout import create_card_layout
 from src.rpg_music_player.tools.player import play_youtube_audio, kill_process_by_pid
 from src.rpg_music_player.youtube.search import YoutubeSearchEngine
+from src.rpg_music_player.database.database import Ambient
 
 # -------- load env variables --------
 load_dotenv(Path(__file__).parent.parent.parent.parent / ".env")
@@ -52,7 +53,7 @@ def change_card_color(*args):
 
         data['n_clicks'] = n_clicks
 
-        if data['url'].startswith('https://www.youtube.com/watch?v='):
+        if data['url'].startswith('https://www.youtube.com/watch?v=') or data['url'].startswith('https://youtube.com/watch?v='):
             url = data['url']
             if n_clicks % 2:
                 volume = 100 if 100 <= data['layout_id'] < 200 else 35
@@ -121,15 +122,21 @@ def update_output100(n_clicks, prompt):
 
         # AI search assistant
         assistant = YouTubeSearchAssistant()
-        prompt_new = assistant.get_background_prompt("dnd environment music")
+        prompt_new = assistant.get_background_prompt(prompt)
         print('new background prompt:', prompt_new)
-
-        # search engine
-        engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
-        results = engine.search(prompt_new, max_results=4)
 
         # create cards layout
         cards: list = []
+        path_ambient = Path(__file__).parent.parent.parent.parent / 'data' / 'bardify' / 'playlists' / 'ambience.yaml'
+        ambient_db = Ambient(path_ambient)
+        records = ambient_db.select_records(prompt_new)
+        records = records.sample(2 if records.shape[0] >= 2 else records.shape[0])
+        results_no: int = 4 - records.shape[0] if records.shape[0] < 4 else 2
+
+        # search engine
+        engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
+        results = engine.search(prompt_new, max_results=results_no)
+
         for ii, rr in enumerate(results):
             cards.append(
                 create_card_layout(
@@ -138,6 +145,20 @@ def update_output100(n_clicks, prompt):
                     channel=rr.channel_name,
                     url=rr.url,
                     thumbnail=rr.thumbnail
+                )
+            )
+
+        ii = 0
+        for _, rr in records.reset_index(drop=True).iterrows():
+            local_id = ii+100+len(cards)
+            ii += 1
+            cards.append(
+                create_card_layout(
+                    layout_id=local_id,
+                    title=rr['title'],
+                    channel=rr['channel_name'],
+                    url=rr['url'],
+                    thumbnail=rr['thumbnail']
                 )
             )
 
@@ -159,16 +180,16 @@ def update_output200(n_clicks, prompt):
 
         # AI search assistant
         assistant = YouTubeSearchAssistant()
-        prompt_new = assistant.get_combat_prompt("dnd combat music")
+        prompt_new = assistant.get_combat_prompt(prompt)
         print('new combat prompt:', prompt_new)
 
-        # search engine
-        engine = YoutubeSearchEngine(YOUTUBE_API_KEY)
-        results = engine.search(prompt_new, max_results=4)
+        db = Ambient(Path(__file__).parent.parent.parent.parent / 'data' / 'bardify' / 'playlists' / 'roll_for_initiative!.yaml')
+        results = db.df.sample(4)
 
         # create cards layout
         cards: list = []
-        for ii, rr in enumerate(results):
+        ii = 0
+        for _, rr in results.iterrows():
             cards.append(
                 create_card_layout(
                     layout_id=ii+200,
@@ -178,6 +199,7 @@ def update_output200(n_clicks, prompt):
                     thumbnail=rr.thumbnail
                 )
             )
+            ii += 1
 
         return tuple(cards)
 

@@ -1,0 +1,51 @@
+The task is to select titles from a given list that are thematically or contextually related to the provided input. The selected titles should reflect an association with the input based on environment, mood, or concept. Return only the selected titles with no extra text.
+
+Examples:
+Input: volcano
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano', 'oasis', 'sandstorm', 'dunes']
+Output: ['volcano', 'sandstorm']
+
+Input: tavern
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['tavern', 'campfire', 'marketplace']
+
+Input: swamp
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['swamp', 'sewers']
+
+Input: night
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['forest (night)']
+
+Input: rain
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['rain', 'thunderstorm']
+
+Input: cave
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['cave', 'sewers']
+
+Input: city
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['city', 'marketplace']
+
+Input: beach
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['beach']
+
+Input: campfire
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['campfire']
+
+Input: ship
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['ship']
+
+Input: forest (night)
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['forest (night)']
+
+Input: blizzard
+Titles: ['forest', 'cave', 'tavern', 'rain', 'thunderstorm', 'city', 'ship', 'forest (night)', 'swamp', 'village', 'blizzard', 'beach', 'sewers', 'campfire', 'marketplace', 'volcano']
+Output: ['blizzard']
+
